@@ -114,8 +114,76 @@ const custombuttons = {
 	this. cbService. mode = mode;
 	this. addObservers ();
 	this. loaded = true;
+	// Be careful! This depends on setTimeout(..., 0) for buttons initialization!
+	setTimeout (function (_this) {
+	    _this. inheritToolbarContextMenu ();
+	}, 0, this);
 	this. initButtons ();
 	this. notifyObservers (null, "custombuttons-initialized", "");
+    },
+
+    inheritToolbarContextMenu: function ()
+    {
+        // Add "Move to ..." and "Remove from ..." items (Firefox 29+)
+        if (!("gCustomizeMode" in window) || !document. getElementsByClassName)
+            return;
+        var hasItems = false;
+        var sep, sepSub;
+        function addItem(name)
+        {
+            var mi = document. getElementsByClassName ("customize-context-" + name) [0];
+            if (!mi)
+                return;
+            if (!hasItems)
+            {
+                hasItems = true;
+                var miCustomize = document. getElementById ("custombuttons-contextpopup-customize");
+                var miCustomizeSub = document. getElementById ("custombuttons-contextpopup-customize-sub");
+                sep = document. createElement ("menuseparator");
+                sepSub = document. createElement ("menuseparator");
+                sep. id = "custombuttons-contextpopup-moveButtonSeparator";
+                sepSub. id = "custombuttons-contextpopup-moveButtonSeparator-sub";
+                miCustomize. parentNode. insertBefore (sep, miCustomize);
+                miCustomizeSub. parentNode. insertBefore (sepSub, miCustomizeSub);
+            }
+            var clone = mi. cloneNode (true);
+            var cloneSub = mi. cloneNode (true);
+            clone. id = "custombuttons-contextpopup-move-" + name;
+            cloneSub. id = "custombuttons-contextpopup-move-" + name + "-sub";
+            clone. className += " menuitem-iconic";
+            cloneSub. className += " menuitem-iconic";
+            sep. parentNode. insertBefore (clone, sep);
+            sepSub. parentNode. insertBefore (cloneSub, sepSub);
+        }
+        addItem ("moveToPanel");
+        addItem ("removeFromToolbar");
+        addItem ("moveToToolbar");
+        addItem ("removeFromPanel");
+        if (hasItems)
+            window. addEventListener ("popupshowing", this, false);
+    },
+    onPopupShowing: function (event)
+    {
+        var popup = event. originalTarget;
+        function getItem (name)
+        {
+            var mi = popup. getElementsByClassName ("customize-context-" + name);
+            return mi. length ? mi [0] : null;
+        }
+        var moveToPanel = getItem ("moveToPanel");
+        if (!moveToPanel)
+            return;
+        function hide (node, hidden)
+        {
+            if (node)
+                node. hidden = hidden;
+        }
+        var pn = document. popupNode;
+        var isMenu = pn && pn. getAttribute ("cui-areatype") == "menu-panel";
+        hide (moveToPanel, isMenu);
+        hide (getItem ("removeFromToolbar"), isMenu);
+        hide (getItem ("moveToToolbar"), !isMenu);
+        hide (getItem ("removeFromPanel"), !isMenu);
     },
 
     initButtons: function ()
@@ -131,6 +199,7 @@ const custombuttons = {
 	window. removeEventListener ("load", custombuttons, false);
 	window. removeEventListener ("unload", custombuttons, false);
 	window. removeEventListener ("keypress", custombuttons, true);
+	window. removeEventListener ("popupshowing", this, false);
     },
 
     copyAttributes: function (oSrcButton, oDstButton)
@@ -524,6 +593,9 @@ const custombuttons = {
 	    break;
 	case "click":
 	    this. onClick (event);
+	    break;
+	case "popupshowing":
+	    this. onPopupShowing (event);
 	    break;
 	default:
 	    break;
