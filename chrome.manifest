@@ -2,14 +2,16 @@
 
 content custombuttons jar:chrome/custombuttons.jar!/content/custombuttons/
 content custombuttons-context chrome/
+content custombuttons-smoverlays jar:chrome/custombuttons.jar!/content/custombuttons/seamonkey/below_2.1a1pre/ application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} appversion<2.1a1pre
+content custombuttons-smoverlays jar:chrome/custombuttons.jar!/content/custombuttons/seamonkey/below_2.12b1/ application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} appversion<2.12b1
+content custombuttons-smoverlays jar:chrome/custombuttons.jar!/content/custombuttons/seamonkey/2.12b1_higher/ application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} appversion>=2.12b1
 
 ## Firefox
 overlay chrome://browser/content/browser.xul chrome://custombuttons/content/overlay.xul
 overlay chrome://browser/content/browser.xul resource://custombuttons/buttonsoverlay.xul
 
 ## Seamonkey navigator
-overlay chrome://navigator/content/navigator.xul chrome://custombuttons/content/SeamonkeyOverlay.xul application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} appversion<2.1a1pre
-overlay chrome://navigator/content/navigator.xul chrome://custombuttons/content/Seamonkey21Overlay.xul application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} appversion>=2.1a1pre
+overlay chrome://navigator/content/navigator.xul chrome://custombuttons-smoverlays/content/SeamonkeyOverlay.xul application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}
 overlay chrome://navigator/content/navigator.xul resource://custombuttons/buttonsoverlay.xul
 overlay chrome://navigator/content/navigator.xul chrome://custombuttons/content/overlay3b2.xul appversion>=3.0b1
 overlay chrome://navigator/content/navigator.xul chrome://custombuttons/content/tcbbutton.xul
