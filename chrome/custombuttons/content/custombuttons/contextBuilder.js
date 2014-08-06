@@ -183,3 +183,17 @@ function sleep (ms)
 		fn. __generator. next ();
 	}, ms);
 }
+
+/**
+ * Continue code execution, shortcut for fn. __generator. next ()
+ * @since version 0.0.5.9
+ * @param {number} ms
+ * @throws {TypeError} If used without "yield"
+ */
+function next ()
+{
+	var fn = executionContext. fn;
+	if (!("__generator" in fn))
+		throw new TypeError ("Custom Buttons: next: execution should be paused using \"yield\" keyword", _uri, Components. stack. caller. lineNumber);
+	fn. __generator. next ();
+}
