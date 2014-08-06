@@ -166,3 +166,20 @@ function addDestructor (func, context)
 	destructor ["context"] = context;
 	oButton. _destructors. push (destructor);
 }
+
+/**
+ * Pause code execution
+ * Usage: ... yield sleep (1000); ... yield 0;
+ * @since version 0.0.5.9
+ * @param {number} ms
+ * @throws {TypeError} If used without "yield"
+ */
+function sleep (ms)
+{
+	var fn = executionContext. fn;
+	if (!("__generator" in fn))
+		throw new TypeError ("Custom Buttons: sleep: use \"yield sleep (ms);\"", _uri, Components. stack. caller. lineNumber);
+	setTimeout (function () {
+		fn. __generator. next ();
+	}, ms);
+}

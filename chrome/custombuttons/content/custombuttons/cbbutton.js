@@ -229,6 +229,7 @@ var custombutton = {
 	var utils = {};
 	utils ["oButton"] = oButton;
 	utils ["buttonURI"] = uri;
+	utils ["executionContext"] = executionContext;
 	Components. classes ["@mozilla.org/moz/jssubscript-loader;1"].
 		getService (Components. interfaces. mozIJSSubScriptLoader).
 		loadSubScript ("chrome://custombuttons/content/contextBuilder.js", utils);
